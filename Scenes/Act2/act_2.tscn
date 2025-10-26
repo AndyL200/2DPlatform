@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://cv6kynd8afou5"]
+
+[ext_resource type="Script" uid="uid://d3602aw0gtrmr" path="res://Scripts/Act2/act_2.gd" id="1_kuau3"]
+[ext_resource type="PackedScene" uid="uid://35ca40121s4p" path="res://Scenes/Act1/a1level_1.tscn" id="2_wic37"]
+[ext_resource type="Script" uid="uid://bdewd201y01xo" path="res://Scripts/act_component.gd" id="3_jf0u0"]
+
+[node name="Act2" type="Control" node_paths=PackedStringArray("act_component")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_kuau3")
+act_component = NodePath("ActComponent")
+
+[node name="Level" parent="." instance=ExtResource("2_wic37")]
+
+[node name="ActComponent" type="Node" parent="."]
+script = ExtResource("3_jf0u0")

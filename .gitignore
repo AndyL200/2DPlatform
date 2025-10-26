@@ -1,0 +1,11 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+.editorconfig
+project.godot
+
+icon.svg.import
+*.import
+*.mp4
+*.gif
