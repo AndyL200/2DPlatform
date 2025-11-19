@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://mc2bp0sw3r5j"]
+
+[ext_resource type="Texture2D" uid="uid://cunoe20me7pm6" path="res://Assets/Custom/bckgda1level2.png" id="1_cqjmi"]
+
+[node name="CanvasLayer" type="CanvasLayer"]
+
+[node name="FallingDown" type="TextureRect" parent="."]
+z_index = -2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_cqjmi")
+expand_mode = 1

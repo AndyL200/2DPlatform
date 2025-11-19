@@ -1,14 +1,18 @@
-[gd_scene load_steps=29 format=4 uid="uid://35ca40121s4p"]
+[gd_scene load_steps=38 format=4 uid="uid://35ca40121s4p"]
 
+[ext_resource type="Script" uid="uid://o8fla63cdgq5" path="res://Scripts/Act1/a_1_level1.gd" id="1_uv8do"]
 [ext_resource type="Texture2D" uid="uid://dd0bog12ylhre" path="res://Assets/Tileset/stringstar fields/tileset.png" id="1_xfk5q"]
-[ext_resource type="Script" uid="uid://dkb0yahc8gya3" path="res://Scripts/level.gd" id="1_xrdnt"]
 [ext_resource type="Texture2D" uid="uid://53kwec1qlop0" path="res://Assets/Tileset/stringstar fields/background_0.png" id="2_7p6j4"]
 [ext_resource type="Texture2D" uid="uid://c6peuwj2qw0a2" path="res://Assets/Tileset/ground-tileset.png" id="2_6444e"]
 [ext_resource type="Texture2D" uid="uid://bsgco4vtcdr5" path="res://Assets/Tileset/stringstar fields/background_2.png" id="3_6444e"]
 [ext_resource type="PackedScene" uid="uid://b64lmhekn55ha" path="res://Scenes/mainCharacterScene.tscn" id="4_7p6j4"]
 [ext_resource type="Script" uid="uid://bu5ix0unn60nu" path="res://Scripts/movingBackground.gd" id="5_evi0p"]
 [ext_resource type="Script" uid="uid://bsc12nyy18s8l" path="res://Scripts/Act1/camera_component.gd" id="7_ct4jx"]
-[ext_resource type="Script" uid="uid://debgc1s74t1ku" path="res://Scripts/level_end_component.gd" id="8_wrinw"]
+[ext_resource type="Script" uid="uid://foiq3mmsty74" path="res://Scripts/viewport_component.gd" id="8_uv8do"]
+[ext_resource type="Script" uid="uid://ccvnjj3662ykj" path="res://Scripts/transition_component.gd" id="10_4t5sc"]
+[ext_resource type="Script" uid="uid://cntmen24fr7mv" path="res://Scripts/Act1/level_end_componenta1l1.gd" id="10_b6bbv"]
+[ext_resource type="PackedScene" uid="uid://coe588ewmrvn3" path="res://Scripts/upgrade_stations.tscn" id="11_2yoyw"]
+[ext_resource type="PackedScene" uid="uid://c2o4rnmp125cq" path="res://Scenes/coinScene.tscn" id="12_b6bbv"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_207y8"]
 friction = 0.0
@@ -313,11 +317,68 @@ size = Vector2(21, 118)
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_7p6j4"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_6ssoq"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b6bbv"]
 size = Vector2(20, 77)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2yoyw"]
+size = Vector2(2104, 29.5)
+
+[sub_resource type="Animation" id="Animation_2yoyw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CanvasLayer/ColorRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_uv8do"]
+resource_name = "fade_in"
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CanvasLayer/ColorRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.9),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_b6bbv"]
+resource_name = "fade_out"
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CanvasLayer/ColorRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.9),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_2yoyw"]
+_data = {
+&"RESET": SubResource("Animation_2yoyw"),
+&"fade_in": SubResource("Animation_uv8do"),
+&"fade_out": SubResource("Animation_b6bbv")
+}
+
 [node name="Level1" type="Node2D"]
-script = ExtResource("1_xrdnt")
+script = ExtResource("1_uv8do")
 metadata/_edit_lock_ = true
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
@@ -328,6 +389,11 @@ tile_set = SubResource("TileSet_ilcil")
 metadata/_edit_lock_ = true
 
 [node name="Visual" type="Node" parent="."]
+
+[node name="ViewportComponent" type="Node2D" parent="Visual" node_paths=PackedStringArray("texture_rect")]
+script = ExtResource("8_uv8do")
+texture_rect = NodePath("../StartingZone/TextureRect")
+metadata/_edit_lock_ = true
 
 [node name="StartingZone" type="CanvasLayer" parent="Visual"]
 layer = -1
@@ -351,21 +417,27 @@ texture = ExtResource("3_6444e")
 script = ExtResource("5_evi0p")
 metadata/_edit_lock_ = true
 
-[node name="CameraComponent" type="Node" parent="Visual" node_paths=PackedStringArray("cam", "anchor")]
+[node name="CameraComponent" type="Node" parent="Visual" node_paths=PackedStringArray("cam", "anchor", "vp_c")]
 script = ExtResource("7_ct4jx")
 cam = NodePath("PlayerCamera")
 anchor = NodePath("../../Player/MC")
+vp_c = NodePath("../ViewportComponent")
 
 [node name="PlayerCamera" type="Camera2D" parent="Visual/CameraComponent"]
 position = Vector2(576.03, 322)
 zoom = Vector2(2, 2)
+limit_left = 0
+limit_top = 0
+position_smoothing_enabled = true
+position_smoothing_speed = 1.0
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
 metadata/_edit_lock_ = true
 
 [node name="Player" type="Node" parent="."]
 
 [node name="MC" parent="Player" instance=ExtResource("4_7p6j4")]
 position = Vector2(99, 562)
-metadata/_edit_lock_ = true
 
 [node name="PlatformObjects" type="Node" parent="."]
 
@@ -446,16 +518,63 @@ metadata/_edit_lock_ = true
 navigation_polygon = SubResource("NavigationPolygon_7p6j4")
 metadata/_edit_lock_ = true
 
-[node name="LevelEndComponent" type="Node" parent="."]
-script = ExtResource("8_wrinw")
+[node name="LevelEndComponent" type="Node" parent="." node_paths=PackedStringArray("t_comp", "player")]
+script = ExtResource("10_b6bbv")
+t_comp = NodePath("../TransitionComponent")
+player = NodePath("../Player/MC")
 
 [node name="Area2D" type="Area2D" parent="LevelEndComponent"]
 position = Vector2(1141, 47)
+metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LevelEndComponent/Area2D"]
 position = Vector2(0, -2.5)
-shape = SubResource("RectangleShape2D_6ssoq")
+shape = SubResource("RectangleShape2D_b6bbv")
+metadata/_edit_lock_ = true
 
-[connection signal="level_end" from="LevelEndComponent" to="." method="_on_level_end_component_level_end"]
-[connection signal="area_entered" from="LevelEndComponent/Area2D" to="LevelEndComponent" method="_on_area_2d_area_entered"]
+[node name="level_floor" type="Area2D" parent="LevelEndComponent"]
+position = Vector2(600, 660)
+
+[node name="floor_collide" type="CollisionShape2D" parent="LevelEndComponent/level_floor"]
+shape = SubResource("RectangleShape2D_2yoyw")
+
+[node name="upgrade_stations" parent="LevelEndComponent/level_floor" instance=ExtResource("11_2yoyw")]
+position = Vector2(57, -93)
+upgrade = "visual"
+
+[node name="TransitionComponent" type="Node" parent="." node_paths=PackedStringArray("transition_control", "animation_player")]
+script = ExtResource("10_4t5sc")
+transition_control = NodePath("CanvasLayer/ColorRect")
+animation_player = NodePath("CanvasLayer/AnimationPlayer")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="TransitionComponent"]
+
+[node name="ColorRect" type="ColorRect" parent="TransitionComponent/CanvasLayer"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.278431, 0, 0.278431, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="TransitionComponent/CanvasLayer"]
+root_node = NodePath("../..")
+libraries = {
+&"": SubResource("AnimationLibrary_2yoyw")
+}
+
+[node name="LevelSound" type="AudioStreamPlayer" parent="."]
+
+[node name="Coin" parent="." instance=ExtResource("12_b6bbv")]
+position = Vector2(325, 574)
+
+[node name="Coin2" parent="." instance=ExtResource("12_b6bbv")]
+position = Vector2(499, 568)
+
+[node name="Coin3" parent="." instance=ExtResource("12_b6bbv")]
+position = Vector2(700, 252)
+
+[connection signal="change_level" from="LevelEndComponent" to="." method="_on_level_end_component_change_level"]
 [connection signal="body_entered" from="LevelEndComponent/Area2D" to="LevelEndComponent" method="_on_area_2d_body_entered"]
+[connection signal="body_entered" from="LevelEndComponent/level_floor" to="LevelEndComponent" method="_on_level_floor_body_entered"]

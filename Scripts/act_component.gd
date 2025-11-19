@@ -2,9 +2,6 @@ class_name ActComponent
 extends Node
 
 
-@onready var act = 1
-@onready var acts = ["", "", ""]
-
 @onready var act1_scenes = [
 	"res://Scenes/Act1/a1level_1.tscn",
 	"res://Scenes/Act1/a1level_2.tscn",
@@ -37,8 +34,3 @@ extends Node
 	"res://Scenes/Act3/a3level_7.tscn",
 	"res://Scenes/Act3/a3level_8.tscn",	
 ]
-
-func act_end(a : ACT) -> void:
-	get_tree().root.remove_child(a)
-	var new_act = load(acts[act-1])
-	get_tree().root.add_child(new_act)

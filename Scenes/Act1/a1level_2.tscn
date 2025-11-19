@@ -1,14 +1,15 @@
-[gd_scene load_steps=16 format=4 uid="uid://cryf4tj1iu34f"]
+[gd_scene load_steps=22 format=4 uid="uid://cryf4tj1iu34f"]
 
-[ext_resource type="Script" uid="uid://ddcqk10wub4f3" path="res://Scripts/Act1/a_1_level_2.gd" id="1_sjj2g"]
+[ext_resource type="Script" uid="uid://ddcqk10wub4f3" path="res://Scripts/Act1/a_1_level2.gd" id="1_sjj2g"]
 [ext_resource type="Texture2D" uid="uid://dd0bog12ylhre" path="res://Assets/Tileset/stringstar fields/tileset.png" id="1_ye7m1"]
 [ext_resource type="Texture2D" uid="uid://c6peuwj2qw0a2" path="res://Assets/Tileset/ground-tileset.png" id="2_71gg7"]
 [ext_resource type="Texture2D" uid="uid://53kwec1qlop0" path="res://Assets/Tileset/stringstar fields/background_0.png" id="3_iarf3"]
 [ext_resource type="PackedScene" uid="uid://b64lmhekn55ha" path="res://Scenes/mainCharacterScene.tscn" id="4_2vs3b"]
 [ext_resource type="Script" uid="uid://foiq3mmsty74" path="res://Scripts/viewport_component.gd" id="5_2vs3b"]
 [ext_resource type="Script" uid="uid://bsc12nyy18s8l" path="res://Scripts/Act1/camera_component.gd" id="6_2vs3b"]
-[ext_resource type="Script" uid="uid://debgc1s74t1ku" path="res://Scripts/level_end_component.gd" id="8_sjj2g"]
 [ext_resource type="Script" uid="uid://ccvnjj3662ykj" path="res://Scripts/transition_component.gd" id="9_4r8xs"]
+[ext_resource type="Script" uid="uid://c3t6dlthl8gmv" path="res://Scripts/Act1/level_end_component_l_2.gd" id="9_ssk8g"]
+[ext_resource type="PackedScene" uid="uid://c2o4rnmp125cq" path="res://Scenes/coinScene.tscn" id="10_4r8xs"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_evi0p"]
 friction = 0.0
@@ -306,9 +307,66 @@ sources/1 = SubResource("TileSetAtlasSource_10iv4")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_e2iqc"]
 size = Vector2(505, 26.5)
 
-[node name="Level2" type="Node2D" node_paths=PackedStringArray("v_comp")]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4r8xs"]
+size = Vector2(1155, 20)
+
+[sub_resource type="Animation" id="Animation_2yoyw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CanvasLayer/ColorRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_uv8do"]
+resource_name = "fade_in"
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CanvasLayer/ColorRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.9),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_b6bbv"]
+resource_name = "fade_out"
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CanvasLayer/ColorRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.9),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_2yoyw"]
+_data = {
+&"RESET": SubResource("Animation_2yoyw"),
+&"fade_in": SubResource("Animation_uv8do"),
+&"fade_out": SubResource("Animation_b6bbv")
+}
+
+[node name="Level2" type="Node2D" node_paths=PackedStringArray("cam")]
 script = ExtResource("1_sjj2g")
-v_comp = NodePath("Visual/ViewportComponent")
+cam = NodePath("Visual/CameraComponent")
 metadata/_edit_lock_ = true
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
@@ -320,26 +378,32 @@ metadata/_edit_lock_ = true
 
 [node name="Visual" type="Node" parent="."]
 
-[node name="CameraComponent" type="Node" parent="Visual" node_paths=PackedStringArray("cam", "anchor")]
+[node name="ViewportComponent" type="Node2D" parent="Visual" node_paths=PackedStringArray("texture_rect")]
+script = ExtResource("5_2vs3b")
+texture_rect = NodePath("../CanvasLayer/TextureRect")
+
+[node name="CameraComponent" type="Node" parent="Visual" node_paths=PackedStringArray("cam", "anchor", "vp_c")]
 script = ExtResource("6_2vs3b")
 cam = NodePath("PlayerCamera")
 anchor = NodePath("../../Player/MC")
+vp_c = NodePath("../ViewportComponent")
 
 [node name="PlayerCamera" type="Camera2D" parent="Visual/CameraComponent"]
-position = Vector2(576.03, 322)
-zoom = Vector2(2, 2)
-metadata/_edit_lock_ = true
+position = Vector2(858, 1672)
+zoom = Vector2(0.7, 0.45)
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+drag_left_margin = 0.1
+drag_top_margin = 0.1
+drag_right_margin = 0.1
+drag_bottom_margin = 0.1
 
-[node name="ViewportComponent" type="Node" parent="Visual" node_paths=PackedStringArray("texture_rect")]
-script = ExtResource("5_2vs3b")
-texture_rect = NodePath("canvas/TextureRect")
-
-[node name="canvas" type="CanvasLayer" parent="Visual/ViewportComponent"]
+[node name="CanvasLayer" type="CanvasLayer" parent="Visual"]
 layer = -1
 
-[node name="TextureRect" type="TextureRect" parent="Visual/ViewportComponent/canvas"]
+[node name="TextureRect" type="TextureRect" parent="Visual/CanvasLayer"]
 modulate = Color(0.342475, 0.23389, 0.187533, 1)
-z_index = 1
+z_index = -2
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -362,14 +426,53 @@ position = Vector2(15, 157)
 navigation_polygon = SubResource("NavigationPolygon_rwxm7")
 metadata/_edit_lock_ = true
 
-[node name="LevelEndComponent" type="Node" parent="."]
-script = ExtResource("8_sjj2g")
+[node name="LevelEndComponentL2" type="Node" parent="." node_paths=PackedStringArray("t_comp", "player")]
+script = ExtResource("9_ssk8g")
+t_comp = NodePath("../TransitionComponent")
+player = NodePath("../Player/MC")
 
-[node name="endArea" type="Area2D" parent="LevelEndComponent"]
+[node name="sub_area" type="Area2D" parent="LevelEndComponentL2"]
 position = Vector2(900, 650)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="LevelEndComponent/endArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LevelEndComponentL2/sub_area"]
 shape = SubResource("RectangleShape2D_e2iqc")
 
-[node name="TransitionComponent" type="Node" parent="."]
+[node name="level_end" type="Area2D" parent="LevelEndComponentL2"]
+position = Vector2(678, 630)
+scale = Vector2(1.5, 1.5)
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LevelEndComponentL2/level_end"]
+shape = SubResource("RectangleShape2D_4r8xs")
+metadata/_edit_lock_ = true
+
+[node name="TransitionComponent" type="Node" parent="." node_paths=PackedStringArray("transition_control", "animation_player")]
 script = ExtResource("9_4r8xs")
+transition_control = NodePath("CanvasLayer/ColorRect")
+animation_player = NodePath("CanvasLayer/AnimationPlayer")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="TransitionComponent"]
+
+[node name="ColorRect" type="ColorRect" parent="TransitionComponent/CanvasLayer"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.278431, 0, 0.278431, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="TransitionComponent/CanvasLayer"]
+root_node = NodePath("../..")
+libraries = {
+&"": SubResource("AnimationLibrary_2yoyw")
+}
+
+[node name="Coin" parent="." instance=ExtResource("10_4r8xs")]
+position = Vector2(390, 237)
+
+[connection signal="change_level" from="LevelEndComponentL2" to="." method="_on_level_end_component_l_2_change_level"]
+[connection signal="sub_end" from="LevelEndComponentL2" to="." method="_on_level_end_component_l_2_sub_end"]
+[connection signal="body_entered" from="LevelEndComponentL2/sub_area" to="LevelEndComponentL2" method="_on_sub_area_body_entered"]
+[connection signal="body_entered" from="LevelEndComponentL2/level_end" to="LevelEndComponentL2" method="_on_level_end_body_entered"]

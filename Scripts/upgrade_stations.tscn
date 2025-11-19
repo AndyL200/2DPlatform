@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://coe588ewmrvn3"]
+
+[ext_resource type="Texture2D" uid="uid://cfhx0dpqg83p0" path="res://Assets/Custom/pixil-frame-0.png" id="1_vcfxj"]
+[ext_resource type="Script" uid="uid://buuvc00vxfufd" path="res://Scripts/upgrade_stations.gd" id="2_u48gj"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_u48gj"]
+radius = 17.0
+height = 54.0
+
+[node name="upgrade_stations" type="Sprite2D"]
+z_index = -1
+texture = ExtResource("1_vcfxj")
+script = ExtResource("2_u48gj")
+
+[node name="upgrade_collide" type="Area2D" parent="."]
+
+[node name="upgrade_collide_shape" type="CollisionShape2D" parent="upgrade_collide"]
+position = Vector2(3, 0)
+shape = SubResource("CapsuleShape2D_u48gj")
+
+[connection signal="body_entered" from="upgrade_collide" to="." method="_on_upgrade_collide_body_entered"]
+[connection signal="body_exited" from="upgrade_collide" to="." method="_on_upgrade_collide_body_exited"]

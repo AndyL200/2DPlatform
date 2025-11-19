@@ -1,7 +1,15 @@
-[gd_scene load_steps=11 format=3 uid="uid://k7ls2xw18po4"]
+[gd_scene load_steps=21 format=3 uid="uid://k7ls2xw18po4"]
 
+[ext_resource type="Script" uid="uid://bl4pic2qdu4oy" path="res://Scripts/Character/enemy1.gd" id="1_6oerl"]
 [ext_resource type="Texture2D" uid="uid://drb0qm5fk02ed" path="res://Assets/Enemies/Sprites/enemy_rpg.png" id="1_8ustk"]
-[ext_resource type="Script" uid="uid://baiaburp7d2yd" path="res://Scripts/chase.gd" id="2_han14"]
+[ext_resource type="Script" uid="uid://13bb17r5dxqw" path="res://Scripts/state_machine.gd" id="2_adtbt"]
+[ext_resource type="Script" uid="uid://dksbdsq44g46c" path="res://Scripts/Character/health_component.gd" id="3_gdabo"]
+[ext_resource type="Script" uid="uid://3un7vvxnj8sl" path="res://Scripts/States/nav_chase_state.gd" id="3_lcboi"]
+[ext_resource type="Script" uid="uid://c6xomjrlw6fqh" path="res://Scripts/Character/hurt_box_component.gd" id="4_adtbt"]
+[ext_resource type="Script" uid="uid://b55gtfs04r55c" path="res://Scripts/States/idle_state.gd" id="4_c4p6w"]
+[ext_resource type="Script" uid="uid://c37yqo3m2r87f" path="res://Scripts/States/patrol_state.gd" id="5_6oerl"]
+[ext_resource type="Script" uid="uid://dumismv64ekra" path="res://Scripts/Character/velocity_component.gd" id="5_lcboi"]
+[ext_resource type="Script" uid="uid://bnx45i0gpj86r" path="res://Scripts/attack_component.gd" id="10_g3d2v"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_64ihr"]
 
@@ -18,6 +26,24 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [1]
+}
+
+[sub_resource type="Animation" id="Animation_6oerl"]
+resource_name = "attack"
+length = 0.5
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [15, 16, 17, 18, 19]
 }
 
 [sub_resource type="Animation" id="Animation_lcboi"]
@@ -38,7 +64,7 @@ tracks/0/keys = {
 }
 
 [sub_resource type="Animation" id="Animation_adtbt"]
-resource_name = "fall"
+resource_name = "idle"
 loop_mode = 1
 step = 0.1
 tracks/0/type = "value"
@@ -52,24 +78,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 1,
 "values": [5, 6, 7, 8, 9]
-}
-
-[sub_resource type="Animation" id="Animation_6oerl"]
-resource_name = "jump"
-length = 0.5
-loop_mode = 1
-step = 0.1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
-"update": 1,
-"values": [15, 16, 17, 18, 19]
 }
 
 [sub_resource type="Animation" id="Animation_xr7uv"]
@@ -110,38 +118,109 @@ tracks/0/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_g3d2v"]
 _data = {
 &"RESET": SubResource("Animation_c4p6w"),
+&"attack": SubResource("Animation_6oerl"),
 &"death": SubResource("Animation_lcboi"),
-&"fall": SubResource("Animation_adtbt"),
-&"jump": SubResource("Animation_6oerl"),
+&"idle": SubResource("Animation_adtbt"),
 &"left": SubResource("Animation_xr7uv"),
 &"right": SubResource("Animation_gdabo")
 }
 
-[node name="enemyBody" type="CharacterBody2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c4p6w"]
+size = Vector2(20, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_adtbt"]
+size = Vector2(244, 130)
+
+[node name="enemyBody" type="CharacterBody2D" node_paths=PackedStringArray("anim", "health", "velc", "hurt_box", "atk")]
+script = ExtResource("1_6oerl")
+anim = NodePath("AnimationPlayer")
+health = NodePath("HealthComponent")
+velc = NodePath("VelocityComponent")
+hurt_box = NodePath("HurtBoxComponent")
+atk = NodePath("AttackComponent")
+metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_64ihr")
+metadata/_edit_lock_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_8ustk")
 hframes = 5
 vframes = 5
 frame = 1
+metadata/_edit_lock_ = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_g3d2v")
 }
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+[node name="State Machines" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("2_adtbt")
+initial_state = NodePath("Idle")
 
-[node name="State Machines" type="Node" parent="."]
-
-[node name="Chase" type="Node" parent="State Machines"]
-script = ExtResource("2_han14")
+[node name="Chase" type="Node" parent="State Machines" node_paths=PackedStringArray("body", "agent", "vel")]
+script = ExtResource("3_lcboi")
+body = NodePath("../..")
+agent = NodePath("../../NavigationAgent2D")
+vel = NodePath("../../VelocityComponent")
 
 [node name="ChaseTimer" type="Timer" parent="State Machines/Chase"]
-wait_time = 0.5
+wait_time = 5.0
 autostart = true
 
+[node name="NavUpdateTime" type="Timer" parent="State Machines/Chase"]
+autostart = true
+
+[node name="Idle" type="Node" parent="State Machines"]
+script = ExtResource("4_c4p6w")
+
+[node name="Patrol" type="Node" parent="State Machines" node_paths=PackedStringArray("body", "vel")]
+script = ExtResource("5_6oerl")
+body = NodePath("../..")
+vel = NodePath("../../VelocityComponent")
+
+[node name="HealthComponent" type="Node2D" parent="."]
+script = ExtResource("3_gdabo")
+health = 2
+limit = 2
+metadata/_edit_lock_ = true
+
+[node name="HurtBoxComponent" type="Area2D" parent="."]
+script = ExtResource("4_adtbt")
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBoxComponent"]
+position = Vector2(0, 6)
+shape = SubResource("RectangleShape2D_c4p6w")
+metadata/_edit_lock_ = true
+
+[node name="VelocityComponent" type="Node2D" parent="."]
+script = ExtResource("5_lcboi")
+metadata/_edit_lock_ = true
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+
+[node name="NavArea" type="Area2D" parent="."]
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NavArea"]
+shape = SubResource("RectangleShape2D_adtbt")
+
+[node name="AttackComponent" type="Node2D" parent="." node_paths=PackedStringArray("attack_ray")]
+script = ExtResource("10_g3d2v")
+attack_ray = NodePath("attack_ray")
+metadata/_edit_lock_ = true
+
+[node name="attack_ray" type="RayCast2D" parent="AttackComponent"]
+rotation = 1.5708
+target_position = Vector2(9.53674e-07, 23)
+
 [connection signal="timeout" from="State Machines/Chase/ChaseTimer" to="State Machines/Chase" method="_on_chase_timer_timeout"]
+[connection signal="timeout" from="State Machines/Chase/NavUpdateTime" to="State Machines/Chase" method="_on_nav_update_time_timeout"]
+[connection signal="death" from="HealthComponent" to="." method="_on_health_component_death"]
+[connection signal="body_entered" from="HurtBoxComponent" to="HurtBoxComponent" method="_on_body_entered"]
+[connection signal="body_entered" from="NavArea" to="State Machines/Chase" method="_on_area_2d_body_entered"]
+[connection signal="body_entered" from="NavArea" to="State Machines/Idle" method="_on_area_2d_body_entered"]
+[connection signal="body_entered" from="NavArea" to="State Machines/Patrol" method="_on_nav_area_body_entered"]

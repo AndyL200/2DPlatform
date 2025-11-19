@@ -1,0 +1,72 @@
+[gd_scene load_steps=4 format=3 uid="uid://bvn6dhox0xgeh"]
+
+[ext_resource type="Texture2D" uid="uid://53kwec1qlop0" path="res://Assets/Tileset/stringstar fields/background_0.png" id="1_28flt"]
+[ext_resource type="Script" uid="uid://cgp8ssngjfo6d" path="res://Scripts/main_menu.gd" id="1_48xlc"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_erv1k"]
+
+[node name="main_menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_48xlc")
+
+[node name="title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -101.0
+offset_top = 150.0
+offset_right = 99.0
+offset_bottom = 180.0
+grow_horizontal = 2
+text = "Nesting Night"
+label_settings = SubResource("LabelSettings_erv1k")
+horizontal_alignment = 1
+
+[node name="Start" type="Label" parent="."]
+layout_mode = 0
+offset_left = 475.0
+offset_top = 250.0
+offset_right = 515.0
+offset_bottom = 273.0
+text = "Start"
+
+[node name="Quit" type="Label" parent="."]
+layout_mode = 0
+offset_left = 475.0
+offset_top = 350.0
+offset_right = 515.0
+offset_bottom = 373.0
+text = "Quit"
+
+[node name="Credits" type="Label" parent="."]
+layout_mode = 0
+offset_left = 475.0
+offset_top = 450.0
+offset_right = 515.0
+offset_bottom = 473.0
+text = "Credits"
+
+[node name="Background" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="TextureRect" type="TextureRect" parent="Background"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_28flt")
+
+[node name="Arrows" type="Label" parent="."]
+layout_mode = 0
+offset_left = 450.0
+offset_top = 250.0
+offset_right = 490.0
+offset_bottom = 273.0
+text = ">>"

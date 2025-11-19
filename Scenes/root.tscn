@@ -1,8 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://byyxl6pxcmr0e"]
+[gd_scene load_steps=6 format=3 uid="uid://byyxl6pxcmr0e"]
 
-[ext_resource type="Script" uid="uid://cij2h77wvkdvo" path="res://Scripts/Act1/act1.gd" id="1_vnucn"]
-[ext_resource type="PackedScene" uid="uid://35ca40121s4p" path="res://Scenes/Act1/a1level_1.tscn" id="2_c3mwy"]
+[ext_resource type="Script" uid="uid://cvs4hsfc6nwgp" path="res://Scripts/root.gd" id="1_c3mwy"]
 [ext_resource type="Script" uid="uid://bdewd201y01xo" path="res://Scripts/act_component.gd" id="3_4g5cr"]
+[ext_resource type="PackedScene" uid="uid://2m73ugpdn06u" path="res://Scenes/Act1/act1.tscn" id="3_vnucn"]
+
+[sub_resource type="FontVariation" id="FontVariation_c3mwy"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_4g5cr"]
+font = SubResource("FontVariation_c3mwy")
+font_size = 40
 
 [node name="Root" type="Control"]
 layout_mode = 3
@@ -11,20 +17,82 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_c3mwy")
+metadata/_edit_lock_ = true
 
-[node name="Act" type="Control" parent="." node_paths=PackedStringArray("act_component")]
+[node name="ActComponent" type="Node" parent="."]
+script = ExtResource("3_4g5cr")
+
+[node name="Act1" parent="." instance=ExtResource("3_vnucn")]
+layout_mode = 1
+
+[node name="GameOver" type="Control" parent="."]
+z_index = 10
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="respawnBut" type="Button" parent="GameOver"]
+z_index = 11
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 383.0
+offset_top = 300.0
+offset_right = 504.0
+offset_bottom = 352.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Respawn"
+
+[node name="quitBut" type="Button" parent="GameOver"]
+z_index = 11
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 596.0
+offset_top = 300.0
+offset_right = 717.0
+offset_bottom = 352.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Quit"
+
+[node name="ColorRect" type="ColorRect" parent="GameOver"]
+z_index = 1
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = 1114.0
+offset_bottom = 607.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_vnucn")
-act_component = NodePath("ActComponent")
+color = Color(0.140447, 0.140447, 0.140447, 1)
 
-[node name="Level" parent="Act" instance=ExtResource("2_c3mwy")]
+[node name="label" type="Label" parent="GameOver"]
+z_index = 11
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 129.0
+offset_top = 210.0
+offset_right = 983.0
+offset_bottom = 283.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Game Over"
+label_settings = SubResource("LabelSettings_4g5cr")
+horizontal_alignment = 1
 
-[node name="ActComponent" type="Node" parent="Act"]
-script = ExtResource("3_4g5cr")
-
-[connection signal="level_end" from="Act/Level" to="." method="_on_level_level_end"]
+[connection signal="pressed" from="GameOver/respawnBut" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="GameOver/quitBut" to="." method="_on_button_2_pressed"]

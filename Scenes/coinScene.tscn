@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://c2o4rnmp125cq"]
+
+[ext_resource type="Script" uid="uid://bhmrd4mwrqld2" path="res://Scenes/coin_script.gd" id="1_efqen"]
+[ext_resource type="Texture2D" uid="uid://du2qba5gouxt4" path="res://Assets/Custom/coincoin.png" id="1_p088l"]
+[ext_resource type="AudioStream" uid="uid://baosufvhw1ulq" path="res://Assets/kenney_new-platformer-pack-1.0/Sounds/sfx_coin.ogg" id="3_6td2r"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_efqen"]
+radius = 8.0
+height = 22.0
+
+[node name="Coin" type="CharacterBody2D" node_paths=PackedStringArray("audio")]
+script = ExtResource("1_efqen")
+audio = NodePath("AudioStreamPlayer")
+
+[node name="CoinSprite" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("1_p088l")
+offset = Vector2(8, 0)
+
+[node name="coin_area" type="Area2D" parent="."]
+
+[node name="CoinCollide" type="CollisionShape2D" parent="coin_area"]
+position = Vector2(0, 1)
+shape = SubResource("CapsuleShape2D_efqen")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_6td2r")
+volume_db = 1.0
+mix_target = 2
+
+[connection signal="body_entered" from="coin_area" to="." method="_on_coin_area_body_entered"]
