@@ -17,3 +17,5 @@ func horizontal_movement(delta : float) -> void:
 	return
 func attack() -> void:
 	return
+func get_health_component():
+	pass

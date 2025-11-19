@@ -6,6 +6,7 @@ extends State
 @export var agent: NavigationAgent2D
 @export var vel : VelocityComponent
 
+
 var player: MC
 var attacking : bool = false
 
@@ -20,7 +21,11 @@ func physics_update(delta: float) -> void:
 		return
 		
 	var dir = body.position.direction_to(agent.get_next_path_position())
+	var angle = atan2(dir.y, dir.x)
+	dir.y = 0
 	vel.vel = dir * speed
+	if abs(angle) > 45:
+		body.jump()
 	if (body.position > agent.target_position - Vector2.LEFT*100 and body.position <= agent.target_position) or (body.position > agent.target_position + Vector2.LEFT*100 and body.position <= agent.target_position):
 		attacking = true
 		await body.attack()

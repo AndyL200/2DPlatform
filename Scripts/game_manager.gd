@@ -1,3 +1,4 @@
+class_name GM
 extends Node
 
 #TODO(nothing keeps the character in bounds)
@@ -6,6 +7,7 @@ extends Node
 @onready var congratsScene = preload("res://Scenes/congrats.tscn")
 signal life_change
 signal death_state
+signal level_death
 signal respawn
 signal upgrade
 
@@ -13,7 +15,7 @@ signal upgrade
 var score := 0
 var lives := 3
 var camZoom = Vector2(3,3)
-var jump = 300.0
+var jump := 300.0
 var atk = 1
 
 func halt() ->  void:
@@ -23,7 +25,7 @@ func resume() -> void:
 	get_tree().paused = false
 
 func congrats() -> void:
-	get_tree().change_scene_to_packed(congratsScene)
+	get_tree().change_scene_to_packed(creditsScene)
 
 func mainMenu() -> void:
 	get_tree().change_scene_to_packed(menuScene)
@@ -36,6 +38,7 @@ func quit() -> void:
 func lives_decrease() -> void:
 	lives -= 1
 	if lives <= 0:
+		level_death.emit()
 		return
 	life_change.emit()
 func lives_increase() -> void:

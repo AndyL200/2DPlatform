@@ -1,13 +1,15 @@
 extends Enemy
 
 @export var anim : AnimationPlayer
-
+@onready var jumpHeight : float = 300.0
 
 
 func _ready() -> void:
 	attack_ray = atk.attack_ray
 	return
-
+func jump() -> void:
+	if is_on_floor():
+		velc.vel.y = Vector2.UP.y * jumpHeight
 func vertical_movement(delta : float) -> void:
 	if not is_on_floor():
 		velc.gravity(delta)
@@ -22,10 +24,12 @@ func attack() -> void:
 	curr_anim = "attack"
 	if attack_ray.is_colliding():
 		var collide = attack_ray.get_collider()
-		if collide and collide is MC:
-			var h = collide.get_children().filter(func(node): return node is HealthComponent)
-			if h.size() > 0:
-				h[0].Damage(d)
+		if collide:
+			if collide is MC:
+				GameManager.lives_decrease()
+			elif collide and Enemy:
+				var h = collide.get_health_component()
+				h.Damage(d)
 func set_animation(animation : String = curr_anim) -> void:
 	if animation == "_":
 		return
@@ -51,9 +55,10 @@ func _physics_process(delta: float) -> void:
 	vertical_movement(delta)
 	horizontal_movement(delta)
 	set_animation(curr_anim)
-	print(health.health)
 	move_and_slide()
 
+func get_health_component():
+	return $HealthComponent
 
 func _on_health_component_death() -> void:
 	anim.play("death")

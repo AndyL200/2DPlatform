@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=4 uid="uid://bfehj0qo0gce6"]
+[gd_scene load_steps=35 format=4 uid="uid://bfehj0qo0gce6"]
 
 [ext_resource type="Script" uid="uid://h6huro1g5tsx" path="res://Scripts/Act1/a_1_level_5.gd" id="1_af7i5"]
 [ext_resource type="Texture2D" uid="uid://dd0bog12ylhre" path="res://Assets/Tileset/stringstar fields/tileset.png" id="1_hfa62"]
@@ -715,6 +715,60 @@ _data = {
 &"fade_out": SubResource("Animation_b6bbv")
 }
 
+[sub_resource type="Animation" id="Animation_7xrx3"]
+resource_name = "upgrade"
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("upgrade:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_8d8aw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("upgrade:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_ofe5n"]
+resource_name = "origin"
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("upgrade:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ofe5n"]
+_data = {
+&"RESET": SubResource("Animation_8d8aw"),
+&"origin": SubResource("Animation_ofe5n"),
+&"upgrade": SubResource("Animation_7xrx3")
+}
+
 [node name="Level5" type="Node2D"]
 script = ExtResource("1_af7i5")
 metadata/_edit_lock_ = true
@@ -849,6 +903,26 @@ libraries = {
 
 [node name="enemyBody" parent="Enemy" instance=ExtResource("10_6avcj")]
 position = Vector2(664, 573)
+
+[node name="UpgradeAnimation" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_ofe5n")
+}
+
+[node name="upgrade" type="Control" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 3
+anchors_preset = 0
+offset_left = 913.0
+offset_top = 378.0
+offset_right = 953.0
+offset_bottom = 418.0
+
+[node name="AtkUpLabel" type="Label" parent="upgrade"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "ATK UP"
 
 [connection signal="change_level" from="LevelEndComponent" to="." method="_on_level_end_component_change_level"]
 [connection signal="body_entered" from="LevelEndComponent/Area2D" to="LevelEndComponent" method="_on_area_2d_body_entered"]

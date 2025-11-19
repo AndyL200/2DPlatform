@@ -7,7 +7,7 @@ extends CharacterBody2D
 @export_category("Movement")
 @export var moveSpeed : float
 @export var stepHeight : int
-var jumpHeight : float
+@onready var jumpHeight : float = GameManager.jump
 @export var deceleration : Vector2
 @export var jumpCount : int
 
@@ -80,6 +80,7 @@ func jumpLogic() -> void:
 		if is_on_floor():
 			jumpCount = 2;
 			velocityComponent.vel.y = Vector2.UP.y * jumpHeight
+			print(jumpHeight)
 			jumpCount -= 1
 		elif not is_on_floor():
 			if jumpCount > 0:
@@ -115,6 +116,7 @@ func ready() -> void:
 	jumpHeight = GameManager.jump
 	GameManager.respawn.connect(respawn)
 	GameManager.upgrade.connect(upgrade)
+	GameManager.level_death.connect(death)
 	upgrade()
 	pass
 func upgrade() -> void:
@@ -131,10 +133,9 @@ func attack() -> void:
 			var collide = attack_ray.get_collider()
 			if collide:
 				if collide is Enemy:
-					var h = collide.get_children().filter(func(node): return node is HealthComponent)
-					if h.size() > 0:
-						h[0].Damage(d)
-				
+					var h = collide.get_health_component()
+					h.Damage(d)
+
 func flip() -> void:
 	if velocity.x > 0.0:
 		scale.x = scale.y * 1

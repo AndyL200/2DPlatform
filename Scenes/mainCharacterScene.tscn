@@ -185,7 +185,6 @@ script = ExtResource("1_1ybpr")
 sound_c = NodePath("SoundComponent")
 moveSpeed = 150.0
 stepHeight = 25
-jumpHeight = 300.0
 deceleration = Vector2(10, 2)
 jumpCount = 2
 hurtBox = NodePath("HurtBoxComponent")
@@ -253,7 +252,8 @@ metadata/_edit_lock_ = true
 [node name="attack_ray" type="RayCast2D" parent="AttackComponent"]
 position = Vector2(0, 5)
 rotation = -1.5708
-target_position = Vector2(-0.000104904, 29)
+scale = Vector2(25, 25)
+target_position = Vector2(-0.0800062, 1.72)
 
 [node name="SoundComponent" type="Node" parent="." node_paths=PackedStringArray("localSound")]
 script = ExtResource("7_lkte0")
